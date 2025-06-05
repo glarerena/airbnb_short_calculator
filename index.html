@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb Arbitrage Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .form-group {
+            @apply mb-4;
+        }
+
+        .form-group label {
+            @apply block text-gray-700 text-sm font-medium mb-2;
+        }
+
+        .form-input {
+            @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+            -moz-appearance: textfield;
+        }
+
+        .form-input::-webkit-outer-spin-button,
+        .form-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .result-item {
+            @apply py-2 border-b border-gray-200 last:border-b-0;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                @apply px-2;
+            }
+            
+            .form-input {
+                @apply text-base;
+            }
+        }
+
+        /* Custom input styling */
+        .form-input {
+            @apply bg-white text-gray-800 text-lg;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            @apply border-blue-500 shadow-md;
+        }
+
+        .form-input::placeholder {
+            @apply text-gray-400;
+        }
+
+        /* Error state */
+        .form-input.error {
+            @apply border-red-500;
+        }
+
+        .error-message {
+            @apply text-red-500 text-sm mt-1 hidden;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Airbnb Arbitrage Calculator</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Input Form -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">Input Parameters</h2>
+                <form id="calculatorForm" class="space-y-4">
+                    <div class="form-group">
+                        <label for="monthlyRent">Monthly Rent to Landlord ($)</label>
+                        <input type="text" id="monthlyRent" name="monthlyRent" required 
+                               class="form-input" placeholder="Enter amount"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="utilities">Monthly Utilities ($)</label>
+                        <input type="text" id="utilities" name="utilities" required 
+                               class="form-input" placeholder="Enter amount"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="furnishingCost">Furnishing & Setup Costs ($)</label>
+                        <input type="text" id="furnishingCost" name="furnishingCost" required 
+                               class="form-input" placeholder="Enter amount"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cleaningFee">Cleaning Fee per Stay ($)</label>
+                        <input type="text" id="cleaningFee" name="cleaningFee" required 
+                               class="form-input" placeholder="Enter amount"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="airbnbFeePercentage">Airbnb Service Fee (%)</label>
+                        <input type="text" id="airbnbFeePercentage" name="airbnbFeePercentage" required 
+                               class="form-input" placeholder="Enter percentage"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="averageDailyRate">Average Daily Rate ($)</label>
+                        <input type="text" id="averageDailyRate" name="averageDailyRate" required 
+                               class="form-input" placeholder="Enter amount"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="occupancyRate">Occupancy Rate (%)</label>
+                        <input type="text" id="occupancyRate" name="occupancyRate" required 
+                               class="form-input" placeholder="Enter percentage"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="averageLengthOfStay">Average Length of Stay (nights)</label>
+                        <input type="text" id="averageLengthOfStay" name="averageLengthOfStay" required 
+                               class="form-input" placeholder="Enter number of nights"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="otherExpenses">Other Monthly Expenses ($)</label>
+                        <input type="text" id="otherExpenses" name="otherExpenses" required 
+                               class="form-input" placeholder="Enter amount"
+                               pattern="[0-9]*\.?[0-9]*" inputmode="decimal">
+                        <div class="error-message">Please enter a valid number</div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
+                        Calculate
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Results -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">Results</h2>
+                <div id="results" class="space-y-4">
+                    <div class="result-item">
+                        <span class="font-medium">Gross Monthly Revenue:</span>
+                        <span id="grossRevenue" class="float-right">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="font-medium">Airbnb Fees:</span>
+                        <span id="airbnbFees" class="float-right">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="font-medium">Monthly Cleaning Cost:</span>
+                        <span id="cleaningCost" class="float-right">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="font-medium">Total Monthly Expenses:</span>
+                        <span id="totalExpenses" class="float-right">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="font-medium">Net Monthly Profit:</span>
+                        <span id="netProfit" class="float-right">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="font-medium">Furnishing Payback Period:</span>
+                        <span id="paybackPeriod" class="float-right">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to validate number input
+        function validateNumberInput(input) {
+            const value = input.value;
+            const isValid = /^\d*\.?\d*$/.test(value);
+            
+            if (!isValid) {
+                input.classList.add('error');
+                input.nextElementSibling.style.display = 'block';
+                return false;
+            } else {
+                input.classList.remove('error');
+                input.nextElementSibling.style.display = 'none';
+                return true;
+            }
+        }
+
+        // Add input validation to all number inputs
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                validateNumberInput(e.target);
+            });
+        });
+
+        function calculateAirbnbMetrics({
+            monthlyRent,
+            utilities,
+            furnishingCost,
+            cleaningFee,
+            airbnbFeePercentage,
+            averageDailyRate,
+            occupancyRate,
+            averageLengthOfStay,
+            otherExpenses
+        }) {
+            // Calculate monthly metrics
+            const grossMonthlyRevenue = averageDailyRate * (occupancyRate / 100) * 30;
+            const airbnbFees = grossMonthlyRevenue * (airbnbFeePercentage / 100);
+            const monthlyCleaningCost = cleaningFee * ((occupancyRate / 100) * 30) / averageLengthOfStay;
+            
+            // Calculate total expenses and profit
+            const totalMonthlyExpenses = (
+                monthlyRent +
+                utilities +
+                monthlyCleaningCost +
+                airbnbFees +
+                otherExpenses
+            );
+            
+            const netMonthlyProfit = grossMonthlyRevenue - totalMonthlyExpenses;
+            
+            // Calculate furnishing payback period
+            const furnishingPaybackPeriod = netMonthlyProfit > 0 ? furnishingCost / netMonthlyProfit : Infinity;
+            
+            return {
+                grossMonthlyRevenue,
+                airbnbFees,
+                monthlyCleaningCost,
+                totalMonthlyExpenses,
+                netMonthlyProfit,
+                furnishingPaybackPeriod
+            };
+        }
+
+        document.getElementById('calculatorForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Validate all inputs before proceeding
+            const inputs = document.querySelectorAll('.form-input');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!validateNumberInput(input)) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                return;
+            }
+            
+            const formData = {
+                monthlyRent: parseFloat(document.getElementById('monthlyRent').value) || 0,
+                utilities: parseFloat(document.getElementById('utilities').value) || 0,
+                furnishingCost: parseFloat(document.getElementById('furnishingCost').value) || 0,
+                cleaningFee: parseFloat(document.getElementById('cleaningFee').value) || 0,
+                airbnbFeePercentage: parseFloat(document.getElementById('airbnbFeePercentage').value) || 0,
+                averageDailyRate: parseFloat(document.getElementById('averageDailyRate').value) || 0,
+                occupancyRate: parseFloat(document.getElementById('occupancyRate').value) || 0,
+                averageLengthOfStay: parseFloat(document.getElementById('averageLengthOfStay').value) || 0,
+                otherExpenses: parseFloat(document.getElementById('otherExpenses').value) || 0
+            };
+
+            try {
+                const results = calculateAirbnbMetrics(formData);
+                
+                // Update results
+                document.getElementById('grossRevenue').textContent = `$${results.grossMonthlyRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                document.getElementById('airbnbFees').textContent = `$${results.airbnbFees.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                document.getElementById('cleaningCost').textContent = `$${results.monthlyCleaningCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                document.getElementById('totalExpenses').textContent = `$${results.totalMonthlyExpenses.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                document.getElementById('netProfit').textContent = `$${results.netMonthlyProfit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                
+                document.getElementById('paybackPeriod').textContent = 
+                    results.furnishingPaybackPeriod === Infinity ? 'Never (negative profit)' : 
+                    `${results.furnishingPaybackPeriod.toFixed(2)} months`;
+            } catch (error) {
+                alert('Error calculating results. Please check your inputs and try again.');
+            }
+        });
+    </script>
+</body>
+</html> 
