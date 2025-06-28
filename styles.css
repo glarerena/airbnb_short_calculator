@@ -34,7 +34,7 @@
 
 /* Card Styling */
 .metric-card {
-    @apply bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200;
+    @apply bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200;
 }
 
 /* Profit Styling */

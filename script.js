@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeChart() {
     const ctx = document.getElementById('financialChart').getContext('2d');
     
-    // Sample data for 6 months
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const sampleRevenue = [3200, 3400, 3100, 3600, 3800, 3500];
-    const sampleExpenses = [2800, 2850, 2750, 2900, 2950, 2850];
+    // Sample data for 12 months
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const sampleRevenue = [3200, 3400, 3100, 3600, 3800, 3500, 4200, 4500, 4100, 3800, 3500, 4000];
+    const sampleExpenses = [2800, 2850, 2750, 2900, 2950, 2850, 3000, 3050, 2950, 2900, 2850, 3000];
     
     financialChart = new Chart(ctx, {
         type: 'bar',
@@ -24,19 +24,19 @@ function initializeChart() {
                 {
                     label: 'Monthly Revenue',
                     data: sampleRevenue,
-                    backgroundColor: 'rgba(20, 184, 166, 0.8)', // teal
-                    borderColor: 'rgba(20, 184, 166, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
+                    backgroundColor: 'rgba(20, 184, 166, 0.7)', // teal with reduced opacity
+                    borderColor: 'rgba(20, 184, 166, 0.9)',
+                    borderWidth: 1.5,
+                    borderRadius: 6,
                     borderSkipped: false,
                 },
                 {
                     label: 'Monthly Expenses',
                     data: sampleExpenses,
-                    backgroundColor: 'rgba(107, 114, 128, 0.8)', // gray
-                    borderColor: 'rgba(107, 114, 128, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
+                    backgroundColor: 'rgba(100, 116, 139, 0.7)', // slate with reduced opacity
+                    borderColor: 'rgba(100, 116, 139, 0.9)',
+                    borderWidth: 1.5,
+                    borderRadius: 6,
                     borderSkipped: false,
                 }
             ]
@@ -47,23 +47,26 @@ function initializeChart() {
             plugins: {
                 legend: {
                     position: 'top',
+                    align: 'start',
                     labels: {
                         usePointStyle: true,
-                        padding: 20,
+                        padding: 12,
                         font: {
-                            size: 14,
+                            size: 13,
                             weight: '500'
-                        }
+                        },
+                        color: '#374151'
                     }
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.98)',
                     titleColor: '#374151',
                     bodyColor: '#374151',
                     borderColor: '#e5e7eb',
                     borderWidth: 1,
                     cornerRadius: 8,
                     displayColors: true,
+                    padding: 12,
                     callbacks: {
                         label: function(context) {
                             return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
@@ -78,21 +81,23 @@ function initializeChart() {
                     },
                     ticks: {
                         font: {
-                            size: 12,
+                            size: 11,
                             weight: '500'
-                        }
+                        },
+                        color: '#6b7280'
                     }
                 },
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(229, 231, 235, 0.5)',
+                        color: 'rgba(229, 231, 235, 0.4)',
                         drawBorder: false
                     },
                     ticks: {
                         font: {
-                            size: 12
+                            size: 11
                         },
+                        color: '#6b7280',
                         callback: function(value) {
                             return '$' + value.toLocaleString();
                         }
@@ -102,6 +107,12 @@ function initializeChart() {
             interaction: {
                 intersect: false,
                 mode: 'index'
+            },
+            layout: {
+                padding: {
+                    top: 8,
+                    bottom: 8
+                }
             }
         }
     });
@@ -279,8 +290,8 @@ function updateBreakEvenProgress(paybackPeriod) {
 // Update financial chart
 function updateFinancialChart(monthlyRevenue, monthlyExpenses) {
     // Update the chart with new calculated values
-    const newRevenueData = Array(6).fill(monthlyRevenue);
-    const newExpensesData = Array(6).fill(monthlyExpenses);
+    const newRevenueData = Array(12).fill(monthlyRevenue);
+    const newExpensesData = Array(12).fill(monthlyExpenses);
     
     financialChart.data.datasets[0].data = newRevenueData;
     financialChart.data.datasets[1].data = newExpensesData;
