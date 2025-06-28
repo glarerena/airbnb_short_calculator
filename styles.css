@@ -1,0 +1,100 @@
+/* Tailwind Config */
+@import url('https://cdn.tailwindcss.com');
+
+/* Custom Tailwind Configuration */
+@layer base {
+    :root {
+        --color-primary-50: #eff6ff;
+        --color-primary-500: #3b82f6;
+        --color-primary-600: #2563eb;
+        --color-primary-700: #1d4ed8;
+    }
+}
+
+/* Form Input Styling */
+.form-input {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900;
+}
+
+.form-input:focus {
+    @apply shadow-md;
+}
+
+.form-input::placeholder {
+    @apply text-gray-400;
+}
+
+.form-input.error {
+    @apply border-red-500 focus:ring-red-500;
+}
+
+.error-message {
+    @apply text-red-500 text-sm mt-1 hidden;
+}
+
+/* Card Styling */
+.metric-card {
+    @apply bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+/* Profit Styling */
+.profit-positive {
+    @apply text-green-600 font-semibold;
+}
+
+.profit-negative {
+    @apply text-red-600 font-semibold;
+}
+
+/* Progress Bar Styling */
+.progress-bar {
+    @apply w-full bg-gray-200 rounded-full h-2 overflow-hidden;
+}
+
+.progress-fill {
+    @apply h-full bg-gradient-to-r from-primary-500 to-primary-600 transition-all duration-500 ease-out;
+}
+
+/* Circular Chart Styling */
+.chart-container {
+    @apply relative w-24 h-24 mx-auto;
+}
+
+.circular-progress {
+    @apply w-full h-full rounded-full border-4 border-gray-200 relative;
+}
+
+.circular-fill {
+    @apply absolute inset-0 rounded-full border-4 border-transparent border-t-primary-500 transition-all duration-1000 ease-out;
+}
+
+.circular-text {
+    @apply absolute inset-0 flex items-center justify-center text-sm font-semibold text-gray-700;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        @apply px-2;
+    }
+    
+    .form-input {
+        @apply text-base;
+    }
+} 
